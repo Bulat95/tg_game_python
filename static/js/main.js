@@ -52,6 +52,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') sendMessage();
     });
 
+
+    async function startGame() {
+    detectiveName = document.getElementById('detective-name').value.trim();
+
+    if (!detectiveName) {
+        alert("Введите имя!");
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/start', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ detective_name: detectiveName })
+        });
+
+        // ... остальной код ...
+    } catch (error) {
+        console.error('Error:', error);
+        alert("Ошибка соединения с сервером");
+    }
+}
+
     async function sendMessage() {
         const message = userInput.value.trim();
 

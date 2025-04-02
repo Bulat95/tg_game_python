@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
 import json
 from pathlib import Path
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
 
 # Конфигурация
 PRISONER_NAME = "Иван"
@@ -14,18 +14,13 @@ PROMPT_PATH = Path("prompts/promptforai.txt")
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs("prompts", exist_ok=True)
 
-
-def get_prompt_template():
-    try:
-        with open(PROMPT_PATH, 'r', encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        return """Ты {{aiName}}, задержанный в тюрьме... [ваш промпт здесь]"""
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(app.static_folder, filename)
 
 
 @app.route('/api/start', methods=['POST'])
